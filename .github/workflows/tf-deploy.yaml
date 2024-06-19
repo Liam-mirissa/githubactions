@@ -32,21 +32,21 @@ jobs:
     - name: terraform init
       id: init
       run: terraform init
-      working-directory: tf_liam
+      working-directory: terraform_liam
 
     - name: terraform validate
       id: validate
       run: terraform validate
-      working-directory: tf_liam
+      working-directory: terraform_liam
 
     - name: terraform plan
       id: plan
       run: terraform plan
-      working-directory: tf_liam
+      working-directory: terraform_liam
 
     - name: terraform apply
       id: apply
       run: terraform apply -auto-approve
-      working-directory: tf_liam
+      working-directory: terraform_liam
 
 
