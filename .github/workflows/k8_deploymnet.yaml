@@ -17,12 +17,12 @@ jobs:
     - name: configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1 
       with: 
-        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY_LIAM }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRETKEY_LIAM }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY_LIAM}}
+        aws-secret-access-key: ${{ secrets.AWS_SECRETKEY_LIAM}}
         aws-region: us-east-2
 
     - name: update kubeconfig
-      run: aws eks update-kubeconfig --name manualcluster1 --region us-east-2
+      runs: aws eks update-kubeconfig --name manualcluster1 --region us-east-2
 
     - name: create namespace
       run: kubectl create namespace web
@@ -31,4 +31,4 @@ jobs:
       run: kubectl apply -f deployment.yaml
       working-directory: kubernetes_liam
 
-      #####
+      ####
