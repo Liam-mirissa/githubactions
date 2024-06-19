@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: atlas-deployment 
+  namespace: web
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: atlas-app 
+  template:
+    metadata: 
+      labels:
+        app: atlas-app 
+    spec:
+      containers:
+      - name: atlas-app
+        image: liamdharmapriya/nginx:latest
+        ports:
+        - containerPort: 80
