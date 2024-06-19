@@ -21,14 +21,14 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRETKEY_LIAM }}
         aws-region: us-east-2
 
-    # - name: update kubeconfig
-    #   run: aws eks update-kubeconfig --name manualcluster1 --region us-east-2
+    - name: update kubeconfig
+      run: aws eks update-kubeconfig --name manualcluster1 --region us-east-2
 
-    # - name: create namespace
-    #   run: kubectl create namespace web
+    - name: create namespace
+      run: kubectl create namespace web
 
-    # - name: Apply Deployment 
-    #   run: kubectl apply -f deployment.yaml
-    #   working-directory: kubernetes_liam
+    - name: Apply Deployment 
+      run: kubectl apply -f deployment.yaml
+      working-directory: kubernetes_liam
 
       #####
