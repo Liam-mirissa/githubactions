@@ -4,10 +4,10 @@ on:
   push: 
     branches: 
       - liam
-  pull request:
+  pull_request:
     branches:
       - liam
-  workflow_despatch: 
+  workflow_dispatch: 
 
 jobs:
   terraform: #job name
