@@ -1,0 +1,70 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    - name: Log in to Amazon ECR
+      id: ecr-login
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY_LIAM }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRETKEY_LIAM }}
+        aws-region: us-east-1  
+
+    - name: Build and tag HTTP image [incremental tag]
+      run: |
+        docker build -f Dockerfile.http -t "${{ secrets.DOCKERHUB_USERNAME }}/http:${{ github.ref_name }}" .
+      
+
+    - name: Build and tag HTTP image [latest tag]
+      run: |
+        docker build -f Dockerfile.http -t "${{ secrets.DOCKERHUB_USERNAME }}/http:latest" .
+
+
+    - name: Build and tag Nginx image [incremental tag]
+      run: |
+        docker build -f Dockerfile.nginx -t "${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ github.ref_name }}" .
+
+
+    - name: Build and tag Nginx image [latest tag]
+      run: |
+        docker build -f Dockerfile.nginx -t "${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest" .
+
+
+    - name: Push HTTP image to Docker Hub [incremental tag]
+      run: docker push "${{ secrets.DOCKERHUB_USERNAME }}/http:${{ github.ref_name }}"
+
+    - name: Push HTTP image to Docker Hub [latest tag]
+      run: docker push "${{ secrets.DOCKERHUB_USERNAME }}/http:latest"
+
+    - name: Push Nginx image to Docker Hub [incremental tag]
+      run: docker push "${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ github.ref_name }}"
+
+    - name: Push Nginx image to Docker Hub [latest tag]
+      run: docker push "${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest"
+
+    - name: Push HTTP image to Amazon ECR [incremental tag]
+      run: docker push "${{ steps.ecr-login.outputs.registry }}/http:${{ github.ref_name }}"
+
+    - name: Push HTTP image to Amazon ECR [latest tag]
+      run: docker push "${{ steps.ecr-login.outputs.registry }}/http:latest"
+
+    - name: Push Nginx image to Amazon ECR [incremental tag]
+      run: docker push "${{ steps.ecr-login.outputs.registry }}/nginx:${{ github.ref_name }}"
+
+    - name: Push Nginx image to Amazon ECR [latest tag]
+      run: docker push "${{ steps.ecr-login.outputs.registry }}/nginx:latest"
